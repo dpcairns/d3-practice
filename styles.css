@@ -1,0 +1,25 @@
+.red{
+	display: inline-block;
+	background-color: #e93f4b;
+	margin-right: 2px;
+}
+.yellow{
+	display: inline-block;
+	background-color: #eadd3e;
+	margin-right: 2px;
+}
+.green{
+	display: inline-block;
+	background-color: #4bdcb0;
+	margin-right: 2px;
+}
+.blue{
+	display: inline-block;
+	background-color: #377cf0;
+	margin-right: 2px;
+}
+.purple{
+	display: inline-block;
+	background-color: #a93fe9;
+	margin-right: 2px;
+}

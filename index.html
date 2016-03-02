@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>D3 practice</title>
+ 	<link href="styles.css" rel="stylesheet" type="text/css">
+ 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+	<script src="jquery-2.2.1.js"></script>
+ 	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.js"></script>
+	<script src="https://cdn.jsdelivr.net/lodash/4.6.1/lodash.min.js"></script>
+</head>
+<body>
+<div class="container">
+	<div class="row">
+		<div class="col-md-6">
+				<form id="height">
+				How wide do you like it, out of ten?
+				<br/>
+				<input type="range" id="mySlider" name="mySlider" min="0" max="10">
+				<br>
+				Enter some numbers to graph (separated with commas!): 
+				<br>
+				<input type="text" id="dataset" name="dataset"><br>
+				Pick a shape for the items:
+				 <div id="shapeGroup"><br>
+				  <input type="radio" id="circle" name="shape" value="rect" checked> Bars<br>
+				  <input type="radio" id="bar" name="shape" value="circle"> Circle<br>
+				</div>
+				 Pick a color for the fill of items:
+				 <div id="itemGroup">
+				  <input type="radio" id="red" name="color" value="#e93f4b" checked> Red<br>
+				  <input type="radio" id="yellow" name="color" value="#eadd3e"> Yellow<br>
+				   <input type="radio" id="green" name="color" value="#4bdcb0"> Green<br>
+				  <input type="radio" id="blue" name="color" value="#377cf0"> Blue <br>
+				  <input type="radio" id="purple" name="color" value="#a93fe9"> Purple
+				</div>
+					 Pick a color for border of items:
+				 <div id="strokeGroup"><br>
+				  <input type="radio" id="yellow" name="colorStroke" value="#eadd3e" checked> Yellow<br>
+				  <input type="radio" id="red" name="colorStroke" value="#e93f4b"> Red<br>
+				   <input type="radio" id="green" name="colorStroke" value="#4bdcb0"> Green<br>
+				  <input type="radio" id="blue" name="colorStroke" value="#377cf0"> Blue <br>
+				  <input type="radio" id="purple" name="colorStroke" value="#a93fe9"> Purple
+				</div>
+				  <div id="bgGroup">
+				   <br>Pick a color for the background:<br>
+				   <input type="radio" id="blue" name="bgcolor" value="blue" value="blue" checked> Blue <br>
+				  <input type="radio" id="red" name="bgcolor" value="red"> Red<br>
+				  <input type="radio" id="yellow" name="bgcolor" value="yellow" value="yellow"> Yellow<br>
+				   <input type="radio" id="green" name="bgcolor" value="green" value="green"> Green<br>
+				  <input type="radio" id="purple" name="bgcolor" value="purple" value="purple"> Purple
+				</div>
+			<button type="submit">Submit</button>
+			</form>
+		</div>
+
+<div class="col-md-6" id="dataBox">
+</div>
+
+</div>
+<script type="text/javascript">
+
+
+
+
+$(document).ready(function(){
+
+	
+
+	  $("form#height").submit(function(event){
+	  	event.preventDefault();
+	
+
+	  	var datasetRaw = $("#dataset").val();
+	  	var dataset = datasetRaw.split(",");
+	  	var dataShape = $("#shapeGroup input[type='radio']:checked").val();
+	  	var backgroundClass = $("#bgGroup input[type='radio']:checked").val();
+	  	var itemColor = $("#itemGroup input[type='radio']:checked").val();
+	  	var wideChoice = parseInt($("input#mySlider").val());
+	  	var stroke = $("#strokeGroup input[type='radio']:checked").val();
+		var numberDataset = dataset.map(function(d){
+			return parseInt(d);
+		})
+		var w = (500 * (wideChoice * .1))
+		var h = 200
+
+	var svg = d3.select("#dataBox")
+			.append("svg")
+			.attr("class", backgroundClass)
+			.attr("width", w)
+			.attr("height", h)
+
+
+
+	if (dataShape === "rect") {
+		svg.selectAll("rect")
+			.data(dataset)
+			.enter()
+			.append("rect")
+						.attr("fill", itemColor)
+						.attr("opacity", function(d){
+							 if (d < (_.max(numberDataset) / 2)){
+								return .5;
+							}
+							else if(d < (_.max(numberDataset) / 3)){
+								return .25
+							}
+							else if(d < (_.max(numberDataset))){
+								return .85
+							}
+							else{
+								return 1;
+							}
+						})
+						.attr("stroke", stroke)
+						.attr("x", function(d, i){
+							return (i * (w / dataset.length) + 10);
+						})
+						.attr("y", function(d){
+							return h - d;
+						})
+						.attr("width", 20)
+				
+						.attr("height", function(d){
+							return d;
+						})
+					svg.selectAll("text")
+						.data(dataset)
+						.enter()
+						.append("text")
+							.attr("x", function(d, i){
+								return (i * (w / dataset.length) + 10);
+							})
+							.attr("y", function(d){
+											return h - d;
+							})
+							.text(function(d){
+								return d
+							})
+
+
+		}
+	else if (dataShape === "circle") {
+		svg.selectAll("circle")
+			.data(dataset)
+			.enter()
+			.append("circle")
+						.attr("fill", itemColor)
+						.attr("stroke", stroke)
+						.attr("opacity", function(d){
+							 if (d < (_.max(numberDataset) / 2)){
+								return .5;
+							}
+							else if(d < (_.max(numberDataset) / 3)){
+								return .25
+							}
+							else if(d < (_.max(numberDataset))){
+								return .85
+							}
+							else{
+								return 1;
+							}
+						})
+						.attr("cx", function(d, i){
+							return (i * (w / dataset.length + 10));
+						})
+						.attr("cy", function(d){
+							return d;
+						})
+						.attr("r", function(d){
+							return d;
+						})
+
+						svg.selectAll("text")
+						.data(dataset)
+						.enter()
+						.append("text")
+							.attr("x", function(d, i){
+								return (i * (w / dataset.length) + 10);
+							})
+							.attr("y", function(d){
+											return h - (h - d);
+							})
+							.text(function(d){
+								return d
+							})
+
+
+		};
+
+
+	});
+});
+ </script>
+
+</div>
+</body>
+</html>
