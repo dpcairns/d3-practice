@@ -23,3 +23,28 @@
 	background-color: #a93fe9;
 	margin-right: 2px;
 }
+
+.axis line{
+	fill:none;
+	stroke-width: .5;
+	stroke: black;
+}
+
+.axis path{
+	fill: none;
+	stroke-width: .5;
+	stroke: black;
+
+}
+
+.axis text{
+	font-family: sans-serif; 
+}
+
+.small-top-gap{
+	margin-top: 2em;
+}
+@keyframes grow{
+	50% {};
+	100% {};
+};
